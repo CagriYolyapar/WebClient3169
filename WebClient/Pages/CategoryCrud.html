@@ -49,6 +49,9 @@
                         <th>Kategori ID</th>
                         <th>Kategori Ismi</th>
                         <th>Kategori Acıklaması</th>
+                        <th>Guncelle</th>
+                        <th>Sil</th>
+                        <th>Sec</th>
                     </tr>
                 </table>
             </div>
@@ -85,7 +88,10 @@
 
             $.each(dataList, function (key,data) {
 
-                $("#tab1").append("<tr> <td>"+data.ID+" </td> <td>"+data.CategoryName+" </td> <td>"+data.Description+" </td>  </tr>");
+                $("#tab1").append("<tr> <td>" + data.ID + " </td> <td>" + data.CategoryName + " </td> <td>" + data.Description + " </td> <td><button id='btnUpdate" + data.ID + "' data-id='" + data.ID + "' value='update' class='btn btn-warning'>Güncelle </button></td> <td><button id='btnDelete" + data.ID + "' data-id='" + data.ID + "' value='delete' class='btn btn-danger'> Sil </button> </td> <td> <button class='btn btn-primary' value='select' data-id='" + data.ID + "' id='btnSelect" + data.ID + "'> Sec </button> </td>  </tr>  ");
+
+
+               
 
 
             });
@@ -151,7 +157,80 @@
             })
 
 
+            //Kategori Ekle
 
+            $("#btnAdd").click(function () {
+
+                $.ajax({
+                    url: "http://localhost:60684/api/Category/AddCategory",
+                    type: "Post",
+                    data: { Name: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+
+                    }
+                })
+
+
+            })
+
+
+            //Kategori Sil
+
+            //Siz Delete tipinde bir request yaptıgınız zaman data ile veri gönderemezsiniz...
+
+            $("#btnDelete").click(function () {
+
+                $.ajax({
+                    url: "http://localhost:60684/api/Category/DeleteCategory/" + $("#txtID").val(),
+                    type: "Delete",
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+
+                })
+
+            })
+
+
+            //Kategori Güncelleme
+
+            $("#btnUpdate").click(function () {
+
+
+                $.ajax({
+
+                    url: "http://localhost:60684/api/Category/UpdateCategory",
+                    type: "Put",
+                    data: { ID: $("#txtID").val(), Name: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+                })
+
+
+
+            })
+
+            //Kategori Ara
+
+            $("#txtSearch").keyup(function () {
+
+                $.ajax({
+
+                    url: "http://localhost:60684/api/Category/SearchCategory",
+                    type: "Get",
+                    data: { item: $(this).val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+
+
+
+                })
+
+
+            })
 
 
         })
@@ -161,7 +240,16 @@
 
     </script>
 
+    <table>
+        <tr>
+            <td>
+                
+            </td>
+            <td>
 
+            </td>
+        </tr>
+    </table>
 
 
 
@@ -169,3 +257,6 @@
 
 </body>
 </html>
+
+
+
