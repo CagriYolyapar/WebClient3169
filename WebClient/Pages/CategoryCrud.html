@@ -106,8 +106,15 @@
 
         function BringData(data) {
             ControlHeader();
-            $("#tab1").append("<tr> <td>" + data.ID + " </td> <td>" + data.CategoryName + " </td> <td>" + data.Description + " </td>  </tr>");
+            $("#tab1").append("<tr> <td>" + data.ID + " </td> <td>" + data.CategoryName + " </td> <td>" + data.Description + " </td> <td><button id='btnUpdate" + data.ID + "' data-id='" + data.ID + "' value='update' class='btn btn-warning'>Güncelle </button></td> <td><button id='btnDelete" + data.ID + "' data-id='" + data.ID + "' value='delete' class='btn btn-danger'> Sil </button> </td> <td> <button class='btn btn-primary' value='select' data-id='" + data.ID + "' id='btnSelect" + data.ID + "'> Sec </button> </td>  </tr>  ");
 
+        }
+
+
+        function FetchData(data) {
+            $("#txtID").val(data.ID);
+            $("#txtName").val(data.CategoryName);
+            $("#txtDesc").val(data.Description);
         }
 
 
@@ -229,6 +236,59 @@
 
                 })
 
+
+            })
+
+
+            //JS EventHandling
+
+
+            //Update
+
+
+            $("#tab1").on("click", "[value=update]", function () {
+
+                $.ajax({
+                    url: "http://localhost:60684/api/Category/UpdateCategory",
+                    type: "Put",
+                    data: { ID: $(this).attr("data-id"), Name: $("#txtName").val(), Description: $("#txtDesc").val() },
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+
+                })
+
+
+            })
+
+            //delete
+
+            $("#tab1").on("click", "[value=delete]", function () {
+
+
+                $.ajax({
+                    url: "http://localhost:60684/api/Category/DeleteCategory/" + $(this).attr("data-id"),
+                    type: "Delete",
+                    success: function (kategoriler) {
+                        BringDataList(kategoriler);
+                    }
+                })
+
+            })
+
+
+            //Select
+
+            $("#tab1").on("click", "[value=select]", function () {
+
+                $.ajax({
+                    url: "http://localhost:60684/api/Category/GetCategory",
+                    data: { id: $(this).attr("data-id") },
+                    type: "Get",
+                    success: function (data) {
+                        FetchData(data);
+                    }
+                })
 
             })
 
